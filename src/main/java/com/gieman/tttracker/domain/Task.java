@@ -1,6 +1,6 @@
 package com.gieman.tttracker.domain;
 
-import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,26 +22,27 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "ttt_task")
 @NamedQueries({
-	@NamedQuery(name = "Task.findAll", query = "SELECT t FROM Task t"),
+	@NamedQuery(name = "Task.findAll", query = "SELECT t FROM Task t ORDER BY t.taskName ASC"),
 	@NamedQuery(name = "Task.findByIdTask", query = "SELECT t FROM Task t WHERE t.idTask = :idTask"),
 	@NamedQuery(name = "Task.findByTaskName", query = "SELECT t FROM Task t WHERE t.taskName = :taskName")})
-public class Task implements Serializable {
+public class Task extends AbstractEntity implements EntityItem<Integer> {
+
 	private static final long serialVersionUID = 1L;
 
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id_task")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Basic(optional = false)
+	@Column(name = "id_task")
 	private Integer idTask;
 
 	@Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 200)
-    @Column(name = "task_name")
+	@NotNull
+	@Size(min = 1, max = 200)
+	@Column(name = "task_name")
 	private String taskName;
 
 	@JoinColumn(name = "id_project", referencedColumnName = "id_project")
-    @ManyToOne(optional = false)
+	@ManyToOne(optional = false)
 	private Project project;
 
 	public Task() {
@@ -56,7 +57,8 @@ public class Task implements Serializable {
 		this.taskName = taskName;
 	}
 
-	public Integer getIdTask() {
+	@Override
+	public Integer getId() {
 		return idTask;
 	}
 
@@ -82,22 +84,18 @@ public class Task implements Serializable {
 
 	@Override
 	public int hashCode() {
-		int hash = 0;
-		hash += (idTask != null ? idTask.hashCode() : 0);
-		return hash;
+		return 79 * 3 + Objects.hashCode(idTask);
 	}
 
 	@Override
-	public boolean equals(Object object) {
-		// TODO: Warning - this method won't work in the case the id fields are not set
-		if (!(object instanceof Task)) {
+	public boolean equals(Object obj) {
+		if (obj == null) {
 			return false;
 		}
-		Task other = (Task) object;
-		if ((this.idTask == null && other.idTask != null) || (this.idTask != null && !this.idTask.equals(other.idTask))) {
+		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		return true;
+		return Objects.equals(idTask, ((Task) obj).idTask);
 	}
 
 	@Override

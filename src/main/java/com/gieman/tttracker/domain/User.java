@@ -1,6 +1,5 @@
 package com.gieman.tttracker.domain;
 
-import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -22,12 +21,10 @@ import javax.validation.constraints.Size;
 @NamedQueries({
 	@NamedQuery(name = "User.findAll", query = "SELECT u FROM User u"),
 	@NamedQuery(name = "User.findByUsername", query = "SELECT u FROM User u WHERE u.username = :username"),
-	@NamedQuery(name = "User.findByFirstName", query = "SELECT u FROM User u WHERE u.firstName = :firstName"),
-	@NamedQuery(name = "User.findByLastName", query = "SELECT u FROM User u WHERE u.lastName = :lastName"),
-	@NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email"),
-	@NamedQuery(name = "User.findByPassword", query = "SELECT u FROM User u WHERE u.password = :password"),
-	@NamedQuery(name = "User.findByAdminRole", query = "SELECT u FROM User u WHERE u.adminRole = :adminRole")})
-public class User implements Serializable {
+	@NamedQuery(name = "User.findByUsernamePassword", query = "SELECT u FROM User "
+			+ "u WHERE (u.username = :username OR u.email = :username) AND u.password = :password"),
+	@NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email")})
+public class User extends AbstractEntity implements EntityItem<String> {
 
 	private static final long serialVersionUID = 1L;
 	@Id
@@ -83,7 +80,8 @@ public class User implements Serializable {
 		this.adminRole = adminRole;
 	}
 
-	public String getUsername() {
+	@Override
+	public String getId() {
 		return username;
 	}
 
@@ -133,18 +131,18 @@ public class User implements Serializable {
 
 	@Override
 	public int hashCode() {
-		int hash = 0;
-		hash += (username != null ? username.hashCode() : 0);
-		return hash;
+		return 97 * 3 + Objects.hashCode(username);
 	}
 
 	@Override
-	public boolean equals(Object object) {
-		if (!(object instanceof User)) {
+	public boolean equals(Object obj) {
+		if (obj == null) {
 			return false;
 		}
-		User other = (User) object;
-		return Objects.equals(username, other.username);
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		return Objects.equals(username, ((User) obj).username);
 	}
 
 	@Override

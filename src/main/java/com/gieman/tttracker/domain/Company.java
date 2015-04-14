@@ -1,7 +1,7 @@
 package com.gieman.tttracker.domain;
 
-import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -23,10 +23,10 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "ttt_company")
 @NamedQueries({
-	@NamedQuery(name = "Company.findAll", query = "SELECT c FROM Company c"),
+	@NamedQuery(name = "Company.findAll", query = "SELECT c FROM Company c ORDER BY c.companyName ASC"),
 	@NamedQuery(name = "Company.findByIdCompany", query = "SELECT c FROM Company c WHERE c.idCompany = :idCompany"),
 	@NamedQuery(name = "Company.findByCompanyName", query = "SELECT c FROM Company c WHERE c.companyName = :companyName")})
-public class Company implements Serializable {
+public class Company extends AbstractEntity implements EntityItem<Integer> {
 	private static final long serialVersionUID = 1L;
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,7 +54,8 @@ public class Company implements Serializable {
 		this.companyName = companyName;
 	}
 
-	public Integer getIdCompany() {
+	@Override
+	public Integer getId() {
 		return idCompany;
 	}
 
@@ -80,22 +81,18 @@ public class Company implements Serializable {
 
 	@Override
 	public int hashCode() {
-		int hash = 0;
-		hash += (idCompany != null ? idCompany.hashCode() : 0);
-		return hash;
+		return 83 * 3 + Objects.hashCode(idCompany);
 	}
 
 	@Override
-	public boolean equals(Object object) {
-		// TODO: Warning - this method won't work in the case the id fields are not set
-		if (!(object instanceof Company)) {
+	public boolean equals(Object obj) {
+		if (obj == null) {
 			return false;
 		}
-		Company other = (Company) object;
-		if ((this.idCompany == null && other.idCompany != null) || (this.idCompany != null && !this.idCompany.equals(other.idCompany))) {
+		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		return true;
+		return Objects.equals(idCompany, ((Company)obj).idCompany);
 	}
 
 	@Override
