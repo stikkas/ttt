@@ -38,7 +38,7 @@ public class GenericDaoImpl<T extends EntityItem, ID extends Serializable> imple
 	public void persist(T obj) {
 		em.persist(obj);
 		logger.info("The " + getClass().getName() + " record with ID = "
-				+ obj.getId() + "has been inserted");
+				+ obj.getId() + " has been inserted");
 	}
 
 	@Override
@@ -52,7 +52,7 @@ public class GenericDaoImpl<T extends EntityItem, ID extends Serializable> imple
 	public void remove(T obj) {
 		em.remove(em.merge(obj));
 		logger.warn("The " + getClass().getName() + " record with ID = "
-				+ obj.getId() + "has been deleted");
+				+ obj.getId() + " has been deleted");
 	}
 
 }
