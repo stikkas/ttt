@@ -3,6 +3,7 @@ package com.gieman.tttracker.dao;
 import com.gieman.tttracker.domain.Company;
 import java.util.List;
 import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
 import org.junit.Test;
 
 /**
@@ -21,6 +22,12 @@ public class CompanyDaoTest extends AbstractDaoForTesting {
 		int id = c1.getId();
 		Company c2 = companyDao.find(id);
 		assertTrue(c1.equals(c2));
+		try {
+			companyDao.find(null);
+			fail("null id should launch exception");
+		} catch (IllegalArgumentException e) {
+		}
+		assertTrue("Negative PK found", companyDao.find(-10) == null);
 		logger.debug("\nFINISHED testFind()\n");
 	}
 
