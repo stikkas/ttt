@@ -59,6 +59,7 @@ public class User extends AbstractEntity implements EntityItem<String> {
 	@Size(min = 1, max = 100)
 	@Column(name = "password")
 	private String password;
+
 	@Basic(optional = false)
 	@NotNull
 	@Column(name = "admin_role")
@@ -129,6 +130,9 @@ public class User extends AbstractEntity implements EntityItem<String> {
 		this.adminRole = adminRole;
 	}
 
+	public boolean isAdmin() {
+		return adminRole == null ? false : adminRole.equals('Y');
+	}
 	@Override
 	public int hashCode() {
 		return 97 * 3 + Objects.hashCode(username);
